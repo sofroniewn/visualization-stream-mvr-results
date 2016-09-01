@@ -5,15 +5,11 @@ module.exports = {
   createStream: function () {
     var results = {
       trialNumber: 0,
-      velocity: {
-        forward: 0,
-        lateral: 0
-      },
-      wallDistance: {
-        left: 0,
-        right: 0,
-        forward: 0
-      },
+      velocityForward: 0,
+      velocityLateral: 0,
+      wallLeft: 0,
+      wallRight: 0,
+      wallForward: 0,
       reward: false,
       collision: false,
       link: false,
@@ -50,16 +46,16 @@ module.exports = {
 
 
     var wdL =  document.createElement('h2')
-    wdL.innerHTML = 'Left wall distance: ' + results.wallDistance.left + ' mm'
+    wdL.innerHTML = 'Left wall distance: ' + results.wallLeft + ' mm'
     document.body.appendChild(wdL)
     var wdR =  document.createElement('h2')
-    wdR.innerHTML = 'Right wall distance: ' + results.wallDistance.right + ' mm'
+    wdR.innerHTML = 'Right wall distance: ' + results.wallRight + ' mm'
     document.body.appendChild(wdR)
     var wdF =  document.createElement('h2')
-    wdF.innerHTML = 'Forward wall distance: ' + results.wallDistance.forward + ' mm'
+    wdF.innerHTML = 'Forward wall distance: ' + results.wallForward + ' mm'
     document.body.appendChild(wdF)
     var speedEl =  document.createElement('h2')
-    var speed = (results.velocity.forward**2 + results.velocity.lateral**2)**(0.5)
+    var speed = (results.velocityForward**2 + results.velocityLateral**2)**(0.5)
     speedEl.innerHTML = 'Speed: ' + speed.toFixed(1) + ' cm/s'
     document.body.appendChild(speedEl)
 
@@ -114,23 +110,24 @@ module.exports = {
       } else {
         collisionLED.style.backgroundColor = '#000000'
       }
+
       trialNumEl.innerHTML = 'Trial number: ' + results.trialNumber
-      timeEl.innerHTML = 'Time: ' + (results.elapsedTime/1000).toFixed(1)
-      wdL.innerHTML = 'Left wall distance: ' + results.wallDistance.left.toPrecision(3) + ' mm'
-      wdR.innerHTML = 'Right wall distance: ' + results.wallDistance.right.toPrecision(3) + ' mm'
-      wdF.innerHTML = 'Forward wall distance: ' + results.wallDistance.forward.toPrecision(3) + ' mm'
-      speed = (results.velocity.forward**2 + results.velocity.lateral**2)**(0.5)*50
+      timeEl.innerHTML = 'Time: ' + (results.time/1000).toFixed(1)
+      wdL.innerHTML = 'Left wall distance: ' + results.wallLeft.toPrecision(3) + ' mm'
+      wdR.innerHTML = 'Right wall distance: ' + results.wallRight.toPrecision(3) + ' mm'
+      wdF.innerHTML = 'Forward wall distance: ' + results.wallForward.toPrecision(3) + ' mm'
+      speed = (results.velocityForward**2 + results.velocityLateral**2)**(0.5)*50
       speedEl.innerHTML = 'Speed: ' + speed.toFixed(1) + ' cm/s'
 
       ySpeed.push(speed) 
       yDeltaTime.push(results.deltaTime) 
-      xTime.push(results.elapsedTime/1000)
+      xTime.push(results.time/1000)
       yDeltaTime.shift()
       ySpeed.shift()
       xTime.shift()
 
-      xDomain[0] = -5+results.elapsedTime/1000
-      xDomain[1] = results.elapsedTime/1000
+      xDomain[0] = -5+results.time/1000
+      xDomain[1] = results.time/1000
       xSpread = Math.abs(xDomain[1] - xDomain[0]) || 1;
       vizGraph.x.domain([xDomain[0] - 0.05 * xSpread, xDomain[1] + 0.05 * xSpread])
 
